@@ -31,6 +31,7 @@ def handle_list(message):
             print(f"Se produjo un error con la web \n {item} --> {e}")
     bot.send_message(message.chat.id, f" {output}")
 
+
 # Setting views to visit web pages
 @bot.message_handler(commands=['nviews'])
 def set_views(message):

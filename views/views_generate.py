@@ -1,7 +1,10 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 import time
 import re
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Configurations
 options = Options()
@@ -24,7 +27,13 @@ def urls_views(url, delay):
         while page == '':
             try:
                 page = driver.get(url)
-                #print(f"Conexión exitosa con --> {url}")
+                WebDriverWait(driver, 30).until(
+                    EC.text_to_be_present_in_element(
+                        (By.CLASS_NAME, 'timer'),  # Element filtration
+                        '0'  # The expected text
+                    )
+                )
+                # print(f"Conexión exitosa con --> {url}")
                 output = {'Visitado -->': url}
                 break
             except:
@@ -35,7 +44,7 @@ def urls_views(url, delay):
                 print("Was a nice sleep, now let me continue...")
                 continue
     else:
-        #print(f"La direccion web es incorrecta --> {url}")
+        # print(f"La direccion web es incorrecta --> {url}")
         output = {'Error': url}
     return output
 
