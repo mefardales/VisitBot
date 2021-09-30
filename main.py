@@ -18,10 +18,18 @@ def send_welcome(message):
 # Handling a list of web sites
 @bot.message_handler(commands=['list'])
 def handle_list(message):
+    output = []
     cleaned_ = message.text.replace('/list', '')
-    url_list = list(cleaned_.split(","))
-    print(url_list)
+    url_tmp = list(cleaned_.split(","))
+    url_list = list(map(lambda f: f.replace(' ', ''), url_tmp))
 
+    print(f"La lista de direciones es --> {url_list}")
+    for item in url_list:
+        try:
+            output.append(urls_views(item, 5))
+        except Exception as e:
+            print(f"Se produjo un error con la web \n {item} --> {e}")
+    bot.send_message(message.chat.id, f" {output}")
 
 # Setting views to visit web pages
 @bot.message_handler(commands=['nviews'])
@@ -38,29 +46,6 @@ def set_views(message):
             print("cantidad de views diarios no pueden ser mayor que --> 1000")
     else:
         bot.send_message(message.chat.id, "-")
-
-
-# Handler url and visit
-@bot.message_handler(func=lambda message: True)
-def view_web(message):
-    # Check url
-    regex = re.compile(
-        r'^(?:http|ftp)s?://'  # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-        r'localhost|'  # localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-        r'(?::\d+)?'  # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-    if re.match(regex, message.text) is not None:
-        try:
-            urls_views(message.text, delay=5)
-            bot.send_message(message.chat.id, "Conexión exitosa")
-            # close_connection()
-        except Exception as ex:
-            bot.send_message(message.chat.id, f"Se produjo un error al conectarse a la página {ex}")
-
-    else:
-        bot.send_message(message.chat.id, " Error !!! \n Inserte direcciones de internet correctas !!!")
 
 
 bot.infinity_polling()
