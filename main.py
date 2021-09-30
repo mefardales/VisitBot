@@ -18,12 +18,18 @@ def send_welcome(message):
 #     print(message.text)
 @bot.message_handler(func=lambda message: True)
 def view_web(message):
-    #Check url
+    # Check url
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(" \
+            r")<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’])) "
+    url = re.match(regex, message.text)
+    if url:
+        # for item in list(message.text):
+        urls_views(message.text, delay=5)
+        bot.send_message(message.chat.id, "Finalizado")
+        close_connection()
+    else:
+        bot.send_message(message.chat.id, " Error !!! \n Inserte direcciones de internet correctas !!!")
 
-    #for item in list(message.text):
-    urls_views(message.text, delay=5)
-    bot.send_message(message.chat.id,"Finalizado")
-    close_connection()
 
 bot.infinity_polling()
 
@@ -35,7 +41,3 @@ bot.infinity_polling()
 #     , "https://notiremedios.com/5XLWiA"
 # ]
 #
-# for item in urls:
-#     urls_views(item, delay=5)
-# print("Finished all conections close the webbrowser object !!! ")
-# close_connection()
