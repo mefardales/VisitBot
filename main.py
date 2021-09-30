@@ -15,6 +15,11 @@ def send_welcome(message):
     bot.reply_to(message, INFO)
 
 
+@bot.message_handler(commands=['vista'])
+def n_views(message):
+    global N_VIEWS
+    N_VIEWS = int(message.text.replace('/vista', ''))
+    bot.send_message(message.chat.id, f"Se va visitar {N_VIEWS} veces cada pagina")
 # Handling a list of web sites
 @bot.message_handler(commands=['list'])
 def handle_list(message):
@@ -26,7 +31,7 @@ def handle_list(message):
     print(f"La lista de direciones es --> {url_list}")
     for item in url_list:
         try:
-            output.append(urls_views(item, 5))
+            output.append(urls_views(item, 5, N_VIEWS))
         except Exception as e:
             print(f"Se produjo un error con la web \n {item} --> {e}")
     bot.send_message(message.chat.id, f" {output}")

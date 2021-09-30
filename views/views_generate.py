@@ -12,9 +12,9 @@ options.headless = True
 driver = webdriver.Chrome(options=options)
 
 
-def urls_views(url, delay):
-    page = ''
+def urls_views(url, delay, views):
     output = {}
+    i = 1
     # Check url
     regex = re.compile(
         r'^(?:http|ftp)s?://'  # http:// or https://
@@ -24,25 +24,28 @@ def urls_views(url, delay):
         r'(?::\d+)?'  # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
     if re.match(regex, url) is not None:
-        while page == '':
-            try:
-                page = driver.get(url)
-                WebDriverWait(driver, 30).until(
-                    EC.text_to_be_present_in_element(
-                        (By.CLASS_NAME, 'timer'),  # Element filtration
-                        '0'  # The expected text
+        while i <= views:
+            page = ''
+            while page == '':
+                try:
+                    page = driver.get(url)
+                    WebDriverWait(driver, 30).until(
+                        EC.text_to_be_present_in_element(
+                            (By.CLASS_NAME, 'timer'),  # Element filtration
+                            '0'  # The expected text
+                        )
                     )
-                )
-                # print(f"Conexión exitosa con --> {url}")
-                output = {'Visitado -->': url}
-                break
-            except:
-                print("Connection refused by the server..")
-                print("Let me sleep for 5 seconds")
-                print("ZZzzzz...")
-                time.sleep(delay)
-                print("Was a nice sleep, now let me continue...")
-                continue
+                    output = {i: url}
+                    break
+                except:
+                    print("Connection refused by the server..")
+                    print("Let me sleep for 5 seconds")
+                    print("ZZzzzz...")
+                    time.sleep(delay)
+                    print("Was a nice sleep, now let me continue...")
+                    continue
+            i += 0
+            print(f" Visitado {i} veces")
     else:
         # print(f"La direccion web es incorrecta --> {url}")
         output = {'Error': url}
