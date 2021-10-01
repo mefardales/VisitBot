@@ -1,3 +1,5 @@
+import time
+
 import requests
 import re
 import telebot
@@ -20,6 +22,8 @@ def n_views(message):
     global N_VIEWS
     N_VIEWS = int(message.text.replace('/vista', ''))
     bot.send_message(message.chat.id, f"Se va visitar {N_VIEWS} veces cada pagina")
+
+
 # Handling a list of web sites
 @bot.message_handler(commands=['list'])
 def handle_list(message):
@@ -54,7 +58,15 @@ def set_views(message):
         bot.send_message(message.chat.id, "-")
 
 
-bot.infinity_polling()
+# TODO
+# Check error
+while True:
+    try:
+        bot.infinity_polling()
+    except Exception as e:
+        time.sleep(10)
+        print('Zzzzz inserta alguna direccion')
+        continue
 
 # urls = [
 #     "https://notiremedios.com/QXpa"

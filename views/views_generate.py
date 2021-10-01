@@ -14,7 +14,7 @@ driver = webdriver.Chrome(options=options)
 
 def urls_views(url, delay, views):
     output = {}
-    i = 1
+    i = 0
     # Check url
     regex = re.compile(
         r'^(?:http|ftp)s?://'  # http:// or https://
@@ -44,7 +44,7 @@ def urls_views(url, delay, views):
                     time.sleep(delay)
                     print("Was a nice sleep, now let me continue...")
                     continue
-            i += 0
+            i += 1
             print(f" Visitado {i} veces")
     else:
         # print(f"La direccion web es incorrecta --> {url}")
